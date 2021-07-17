@@ -6,12 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -46,11 +45,13 @@ fun MainScreen(mainViewModel: MainViewModel = MainViewModel()) {
             modifier = Modifier.fillMaxSize(),
             //color = Color.LightGray We used the color from the Theme.kt file
         ) {
-            Column() {
+            LazyColumn() {
                 val users = mainViewModel.userProfileList
-                for (userProfile in users) {
-                    ProfileCard(userProfile)
+                items(users){ user ->
+                    ProfileCard(userProfile = user)
                 }
+                //We can pass item, as a separator or itemIndexed
+
             }
         }
     }
