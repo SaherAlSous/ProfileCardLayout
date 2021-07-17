@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(mainViewModel: MainViewModel = MainViewModel()) {
     /**
      * We can use [Scaffold] to pass an AppBar,
      * we add the main Surface within it.
@@ -46,7 +46,12 @@ fun MainScreen() {
             modifier = Modifier.fillMaxSize(),
             //color = Color.LightGray We used the color from the Theme.kt file
         ) {
-            ProfileCard()
+            Column() {
+                val users = mainViewModel.userProfileList
+                for (userProfile in users) {
+                    ProfileCard(userProfile)
+                }
+            }
         }
     }
 }
@@ -70,10 +75,10 @@ fun AppBar(){
 }
 
 @Composable
-fun ProfileCard() {
-    Card(
+fun ProfileCard(userProfile: UserProfile) {
+    Card( //We changed the default shape of Card to make a cut in the corner.
         modifier = Modifier
-            .padding(16.dp)
+            .padding(top = 8.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
             .fillMaxWidth()
             .wrapContentHeight(
                 align = Alignment.Top
@@ -86,25 +91,25 @@ fun ProfileCard() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            ProfilePicture()
-            ProfileContent()
+            ProfilePicture(userProfile.drawableId, userProfile.status)
+            ProfileContent(userProfile.name, userProfile.status)
         }
     }
 }
 
 @Composable
-fun ProfilePicture() {
+fun ProfilePicture(drawableId: Int, onlineStatus: Boolean) {
     /**
      * We wrap it in a [Card] to use its properties
      */
     Card(
         shape = CircleShape,
-        border = BorderStroke(width = 2.dp, color = lightGreen  /* We can use it this way as well MaterialTheme.colors.lightGreen */),
+        border = BorderStroke(width = 2.dp, color = if (onlineStatus) lightGreen else Color.Red  /* We can use it this way as well MaterialTheme.colors.lightGreen */),
         modifier = Modifier.padding(16.dp),
         elevation = 4.dp
     ) {
         Image(
-            painter = painterResource(id = R.drawable.hala),
+            painter = painterResource(id = drawableId),
             contentDescription = "Test Image",
             modifier = Modifier.size(72.dp),
             contentScale = ContentScale.Crop
@@ -113,7 +118,7 @@ fun ProfilePicture() {
 }
 
 @Composable
-fun ProfileContent() {
+fun ProfileContent(name: String, onlineStatus: Boolean) {
     Column(
         modifier =
         Modifier
@@ -121,11 +126,12 @@ fun ProfileContent() {
             .fillMaxWidth()
     ) {
         Text(
-            text = "Hala Atamleh",
-            style = MaterialTheme.typography.h5
+            text = name,
+            style = MaterialTheme.typography.h5,
+            modifier = if (onlineStatus)  Modifier.alpha(1f) else  Modifier.alpha(0.5f)
         )
         Text(
-            text = "Active Now",
+            text = if (onlineStatus) "Active Now" else "Offline",
             style = MaterialTheme.typography.body2,
             modifier = Modifier.alpha(0.5f)
         )
