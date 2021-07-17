@@ -19,6 +19,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.transform.CircleCropTransformation
+import com.google.accompanist.coil.rememberCoilPainter
 import com.saher.profilecardlayout.ui.theme.ProfileCardLayoutTheme
 import com.saher.profilecardlayout.ui.theme.lightGreen
 
@@ -92,14 +94,14 @@ fun ProfileCard(userProfile: UserProfile) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            ProfilePicture(userProfile.drawableId, userProfile.status)
+            ProfilePicture(userProfile.pictureUrl, userProfile.status)
             ProfileContent(userProfile.name, userProfile.status)
         }
     }
 }
 
 @Composable
-fun ProfilePicture(drawableId: Int, onlineStatus: Boolean) {
+fun ProfilePicture(drawableId: String, onlineStatus: Boolean) {
     /**
      * We wrap it in a [Card] to use its properties
      */
@@ -110,10 +112,13 @@ fun ProfilePicture(drawableId: Int, onlineStatus: Boolean) {
         elevation = 4.dp
     ) {
         Image(
-            painter = painterResource(id = drawableId),
-            contentDescription = "Test Image",
+            painter = rememberCoilPainter(
+                request= drawableId,
+            requestBuilder = {
+                transformations(CircleCropTransformation())
+            }),
+            contentDescription = "User Image",
             modifier = Modifier.size(72.dp),
-            contentScale = ContentScale.Crop
         )
     }
 }
