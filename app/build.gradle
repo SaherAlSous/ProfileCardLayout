@@ -59,4 +59,7 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
     implementation "com.google.accompanist:accompanist-coil:$coil_version"
+
+    implementation 'androidx.navigation:navigation-compose:2.4.0-alpha04'
+
 }
